@@ -3,9 +3,9 @@ import axios from "axios";
 import "../../../components/user/Product/ProductSidebar.css";
 
 const ProductSidebar = ({ selectedCategoryId, setSelectedCategoryId, onSearch  }) => {
-  const [products, setProducts] = useState([]);
-  const [galleryImages, setGalleryImages] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [ products, setProducts ] = useState([]);
+  const [ galleryImages, setGalleryImages ] = useState([]);
+  const [ categories, setCategories ] = useState([]);
 
   const fetchTopProducts = async () => {
     try {

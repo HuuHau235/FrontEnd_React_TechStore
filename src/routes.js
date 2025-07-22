@@ -38,7 +38,7 @@ function AppRoutes() {
           <Route path="/resetpassword" element={<ResetPassword />} />
         </Route>
 
-          <Route element={<UserLayout />}>
+        <Route element={<UserLayout />}>
           <Route index element={<HomePage />} />
         </Route>
         

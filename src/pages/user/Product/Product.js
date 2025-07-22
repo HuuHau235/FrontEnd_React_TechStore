@@ -115,13 +115,12 @@ const ProductList = ({ searchQuery }) => {
                     </div>
 
                     <AddToCart
-                      product={product}
+                      product={product} 
+                      quantity={1}
                       className="bg-red-500 text-white px-3 py-2 rounded flex items-center justify-center gap-2 hover:bg-red-600 transition mb-2"
                     >
                       <FaShoppingCart /> ADD TO CART
                     </AddToCart>
-
-
                     
                     <AddToWishlist
                       className="text-gray-500 flex items-center justify-center gap-2 hover:text-red-500 transition"

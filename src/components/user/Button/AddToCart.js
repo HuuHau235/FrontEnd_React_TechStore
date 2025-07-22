@@ -5,7 +5,7 @@ import { CartContext } from '../../../context/CartContext';
 
 const apiUrl = process.env.REACT_APP_BE_URL;
 
-const AddToCart = ({ product, quantity = 1, className = "", children }) => {
+const AddToCart = ({ product, quantity = 1, selectedColor = null, className = "", children }) => {
   const { syncCartItems } = useContext(CartContext);
 
   const checkStockBeforeAdd = async (productId, quantityToAdd) => {
@@ -21,77 +21,86 @@ const AddToCart = ({ product, quantity = 1, className = "", children }) => {
         ? res.data
         : res.data?.data || [];
 
-      const existingItem = cartItems.find(item => item.product_id === productId);
+      const existingItem = cartItems.find(item =>
+        item.product_id === productId &&
+        (selectedColor ? item.color === selectedColor : true) // Nếu có selectedColor thì check đúng màu
+      );
+
       const inCart = existingItem ? existingItem.quantity : 0;
       const totalAfterAdd = inCart + quantityToAdd;
 
       if (totalAfterAdd > product.stock) {
-        toast.warning(`⚠️ Quantity in basket (${inCart}) + new number(${quantityToAdd}) excess inventory (${product.stock})`);
+        toast.warning(`⚠️ Bạn đã có ${inCart} sản phẩm trong giỏ. Thêm ${quantityToAdd} nữa sẽ vượt tồn kho (${product.stock}).`);
         return false;
       }
 
       return true;
     } catch (err) {
       console.error("Error checking cart:", err);
-      toast.error("Unable to check cart.");
+      toast.error("Không thể kiểm tra giỏ hàng.");
       return false;
     }
   };
 
- const handleAddToCart = async () => {
-  if (!product || typeof product.stock === "undefined") {
-    console.log("❌ Product missing or no stock info");
-    toast.error("Product information not found.");
-    return;
-  }
-
-  console.log("🛒 [CLICK] Add to cart button clicked.");
-  console.log("🔎 Product Info:", product);
-  console.log("📦 Quantity to add:", quantity);
-
-  const isValid = await checkStockBeforeAdd(product.id, quantity);
-  if (!isValid) {
-    console.log("❌ Cannot add to cart: exceeds stock.");
-    return;
-  }
-
-  try {
-    const payload = {
-      product_id: product.id,
-      quantity,
-    };
-
-    console.log("📤 Sending to backend:", payload);
-
-    await axios.post(`${apiUrl}/api/user/cart/add`, payload, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        Accept: "application/json",
-      },
-    });
-
-    console.log("✅ Successfully added to cart.");
-    toast.success("Product successfully added to cart!");
-    syncCartItems();
-  } catch (error) {
-    console.error("❌ Add to cart error:", error);
-
-    const message = error.response?.data?.message || "Failed to add to cart.";
-    const stock = error.response?.data?.stock;
-    const in_cart = error.response?.data?.in_cart;
-
-    if (error.response?.status === 401) {
-      toast.error("You need to log in to make a purchase.");
-    } else if (
-      error.response?.status === 400 &&
-      message.toLowerCase().includes("exceeds available stock")
-    ) {
-      toast.warning(`Only ${stock} left, you already have ${in_cart} in cart.`);
-    } else {
-      toast.error(message);
+  const handleAddToCart = async () => {
+    if (!product || typeof product.stock === "undefined") {
+      toast.error("Không tìm thấy thông tin sản phẩm.");
+      return;
     }
-  }
-};
+
+    const isValid = await checkStockBeforeAdd(product.id, quantity);
+    if (!isValid) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+
+      let payload = {
+        product_id: product.id,
+        quantity,
+      };
+
+      let apiEndpoint = "";
+
+      if (selectedColor) {
+        // ✅ Trường hợp Product Detail
+        payload.color = selectedColor;
+        apiEndpoint = `${apiUrl}/api/product/add-to-cart`;
+      } else {
+        // ✅ Trường hợp Product List (mặc định Black)
+        payload.color = "black";
+        apiEndpoint = `${apiUrl}/api/user/cart/add`;
+      }
+
+      await axios.post(apiEndpoint, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
+
+      toast.success(`Đã thêm vào giỏ hàng! (${payload.color})`);
+      syncCartItems();
+    } catch (error) {
+      console.error("❌ Lỗi thêm vào giỏ hàng:", error);
+
+      const message = error.response?.data?.message || "Thêm vào giỏ hàng thất bại.";
+      const stock = error.response?.data?.stock;
+      const in_cart = error.response?.data?.in_cart;
+
+      if (error.response?.status === 401) {
+        toast.error("Bạn cần đăng nhập để mua hàng.");
+      } else if (
+        error.response?.status === 400 &&
+        message.toLowerCase().includes("exceeds available stock")
+      ) {
+        toast.warning(`Chỉ còn ${stock} sản phẩm trong kho, bạn đã có ${in_cart} sản phẩm trong giỏ.`);
+      } else {
+        toast.error(message);
+      }
+    }
+  };
 
   return (
     <button onClick={handleAddToCart} className={`flex items-center gap-2 transition ${className}`}>
@@ -101,3 +110,4 @@ const AddToCart = ({ product, quantity = 1, className = "", children }) => {
 };
 
 export default AddToCart;
+

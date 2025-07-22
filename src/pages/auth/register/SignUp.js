@@ -8,10 +8,10 @@ import "./SignUp.css";
 import axios from "axios";
 
 export default function SignUpPage() {
-  const [activeTab, setActiveTab] = useState("signup");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formData, setFormData] = useState({ 
+  const [ activeTab, setActiveTab ] = useState("signup");
+  const [ showPassword, setShowPassword ] = useState(false);
+  const [ showConfirmPassword, setShowConfirmPassword ] = useState(false);
+  const [ formData, setFormData ] = useState({ 
     name: "", 
     email: "", 
     password: "", 
@@ -19,9 +19,9 @@ export default function SignUpPage() {
     agreeToTerms: false 
   });
 
-  const [loading, setLoading] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [generatedEmail, setGeneratedEmail] = useState(null);
+  const [ loading, setLoading ] = useState(false);
+  const [ isVerifying, setIsVerifying ] = useState(false);
+  const [ generatedEmail, setGeneratedEmail ] = useState(null);
   //  Hiển thị form OTP nếu isVerifying = true
 
   const handleInputChange = (e) => {

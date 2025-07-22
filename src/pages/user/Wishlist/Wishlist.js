@@ -135,8 +135,8 @@ export default function Wishlist() {
               <div className="col-action">
                 <BuyNow className="buy-now-btn" product={product} label="SHOW NOW" />
                 <AddToCart className="add-to-cart-btn" product={product} quantity={1}>
-  Add To Cart
-</AddToCart>
+                  Add To Cart
+                </AddToCart>
 
                 <button
                   className="heart-icon"

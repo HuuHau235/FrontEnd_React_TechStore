@@ -126,7 +126,7 @@ const ProductDetail = () => {
   };
 
   const handleProductClick = (productId) => {
-    navigate(`${apiUrl}/user/product-detail/${productId}`);
+    navigate(`/user/product-detail/${productId}`);
   };
 
   useEffect(() => {
@@ -235,6 +235,7 @@ const ProductDetail = () => {
             <AddToCart
               product={product}
               quantity={quantity}
+              selectedColor={selectedColor}
               className="add-to-cart-btn-product-detail"
             >
               <ShoppingCart color="#fff" size={25} style={{ marginRight: 8 }} />

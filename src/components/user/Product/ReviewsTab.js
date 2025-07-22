@@ -8,7 +8,7 @@ const apiUrl = process.env.REACT_APP_BE_URL;
 
 const ReviewsTab = () => {
   const { id: productId } = useParams(); 
-  const [reviews, setReviews] = useState([]);
+  const [ reviews, setReviews ] = useState([]);
 
   useEffect(() => {
     const fetchReviews = async () => {

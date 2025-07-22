@@ -4,17 +4,17 @@ import { toast } from "react-toastify";
 import "../../../pages/user/Product/Product.css";
 import { useParams } from "react-router-dom";
 
-const apiUrl = process.env.REACT_APP_BE_URL;
+const apiUrl = process.env.REACT_APP_BE_URL.replace(/[\.\/]+$/, "");
 
 const ReviewModal = ({ onClose }) => {
   const { id } = useParams(); 
-  const [overallRating, setOverallRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [reviewDetail, setReviewDetail] = useState("");
-  const [uploadedImages, setUploadedImages] = useState([]);
-  const [isDragOver, setIsDragOver] = useState(false);
+  const [ overallRating, setOverallRating ] = useState(0);
+  const [ hoverRating, setHoverRating ] = useState(0);
+  const [ reviewDetail, setReviewDetail ] = useState("");
+  const [ uploadedImages, setUploadedImages ] = useState([]);
+  const [ isDragOver, setIsDragOver ] = useState(false);
   const fileInputRef = useRef(null);
-
+  
   const handleStarClick = (rating) => setOverallRating(rating);
   const handleStarHover = (rating) => setHoverRating(rating);
   const handleStarLeave = () => setHoverRating(0);
