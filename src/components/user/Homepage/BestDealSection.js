@@ -114,13 +114,14 @@ const BestDealSection = () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-        toast.warning("Please login to view product details!");
-        return;
+      toast.warning("Please login to view product details!");
+      return;
     }
 
     navigate(`/user/product-detail/${productId}`);
-};
+  };
 
+  if (deals.length === 0) return null;
   return (
     <div className="best-deals-container-best-deal">
       <div className="header-section-best-deal">

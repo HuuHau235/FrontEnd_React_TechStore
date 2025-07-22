@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../../pages/user/Payment/Payment.css";
 import axios from "axios";
+import InformationProductDetail from "./InformationProductDetail";
 
 const paymentMap = {
   cash: "COD",
   momo: "Momo",
   qr: "QR",
+  vnpay: "VNPay",
 };
 
 const PaymentIcon = ({ type }) => {
@@ -24,47 +26,32 @@ const PaymentIcon = ({ type }) => {
   }
 };
 
-const useCheckoutData = () => {
-  const [data, setData] = useState({
-    products: [],
-    subtotal: 0,
-    discount: 0,
-    shippingFee: 0,
-    total: 0,
-  });
-
-  useEffect(() => {
-    const localData = JSON.parse(localStorage.getItem("checkoutData"));
-    if (localData) {
-      const total = (localData.subtotal || 0) - (localData.discount || 0) + (localData.shippingCost || 0);
-      setData({
-        products: localData.items || [],
-        subtotal: localData.subtotal || 0,
-        discount: localData.discount || 0,
-        shippingFee: localData.shippingCost || 0,
-        total,
-      });
-    }
-  }, []);
-
-  return data;
-};
-
 const PaymentMethod = () => {
   const [selectedPayment, setSelectedPayment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [shippingFee, setShippingFee] = useState(0);
+  const [total, setTotal] = useState(0);
+
   const navigate = useNavigate();
-  const { products, subtotal, discount, shippingFee, total } = useCheckoutData();
+
+  const token = localStorage.getItem("token");
+  const orderId = localStorage.getItem("currentOrderId");
+
 
   const handleAccept = async () => {
     if (!selectedPayment) return alert("Please select a payment method.");
-    const orderId = localStorage.getItem("currentOrderId");
     if (!orderId) return alert("Order ID not found.");
-    const amountVND = Math.round(total * 24000);
+
+    const exchangeRate = 24000;
+    const amountVND = Math.round(total * exchangeRate);
 
     try {
       setIsLoading(true);
+
       if (selectedPayment === "qr") {
         if (!showQRCode) return setShowQRCode(true);
         await axios.post("https://backendlaraveltechstore-production.up.railway.app/api/user/orders/confirm-payment", {
@@ -75,16 +62,6 @@ const PaymentMethod = () => {
         return navigate("/user/payment_confirmation");
       }
 
-      await fetch("https://backendlaraveltechstore-production.up.railway.app/api/user/payments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          order_id: orderId,
-          payment_method: selectedPayment,
-          amount: amountVND,
-        }),
-      });
 
       if (selectedPayment === "cash") {
         await axios.post("https://backendlaraveltechstore-production.up.railway.app/api/user/orders/confirm-payment", {
@@ -105,7 +82,21 @@ const PaymentMethod = () => {
         });
         const data = await res.json();
         if (data.payUrl) window.location.href = data.payUrl;
-        else alert("Failed to create MoMo payment link.");
+        else alert("❌ Failed to create MoMo payment link.");
+        return;
+      }
+
+      if (selectedPayment === "vnpay") {
+        const res = await axios.post("https://backendlaraveltechstore-production.up.railway.app/api/user/create-payment", {
+          amount: amountVND,
+          order_id: orderId,
+        });
+        if (res.data && res.data.url) {
+          window.location.href = res.data.url;
+        } else {
+          alert("❌ Failed to create VNPay payment link.");
+        }
+        return;
       }
     } catch (err) {
       alert("An error occurred while processing the payment.");
@@ -119,8 +110,35 @@ const PaymentMethod = () => {
     { id: "momo", name: "MoMo", description: "Payment via MoMo", icon: "phone" },
     { id: "cash", name: "Cash", description: "Payment via Cash", icon: "cash" },
     { id: "qr", name: "QR", description: "Payment via QR", icon: "qr" },
+    { id: "vnpay", name: "VNPay", description: "Payment via VNPay", icon: "card" },
   ];
+useEffect(() => {
+  const fetchOrder = async () => {
+    try {
+      const res = await fetch(
+        `https://backendlaraveltechstore-production.up.railway.app/api/user/orders/${orderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
+      if (!res.ok) throw new Error("Failed to fetch order");
+
+      const data = await res.json();
+      if (data.order) {
+        setTotal(parseFloat(data.order.total_amount || 0));
+      }
+    } catch (err) {
+      console.error("Error fetching order in PaymentMethod:", err.message);
+    }
+  };
+
+  if (orderId && token) {
+    fetchOrder();
+  }
+}, [orderId, token]);
   return (
     <div className="payment-container-paymentMethod">
       <h1 className="payment-title-paymentMethod">Payment</h1>
@@ -170,11 +188,19 @@ const PaymentMethod = () => {
               </div>
             )}
 
+            {selectedPayment === "vnpay" && (
+              <div style={{ marginTop: "20px", fontStyle: "italic", color: "#555" }}>
+                You will be redirected to VNPay to complete the payment.
+              </div>
+            )}
+
             <div className="payment-footer-paymentMethod">
-              <div className="total-section-paymentMethod">
+               <div className="total-section-paymentMethod">
                 <span className="total-label-paymentMethod">Total:</span>
                 <span className="total-amount-paymentMethod">${total.toFixed(2)}</span>
               </div>
+
+
               <button
                 className="accept-btn-paymentMethod"
                 onClick={handleAccept}
@@ -194,37 +220,13 @@ const PaymentMethod = () => {
         </div>
 
         <div className="right-section-paymentMethod">
-          <div className="product-section-paymentMethod">
-            <h3>Products</h3>
-            <div className="product-list-paymentMethod">
-              {products.length > 0 ? (
-                products.map((product) => (
-                  <div key={product.cart_item_id} className="product-item-paymentMethod">
-                    <img src={product.image || "/placeholder.svg"} alt={product.name} className="product-image-paymentMethod" />
-                    <div className="product-details-paymentMethod">
-                      <h4>{product.name}</h4>
-                      <p className="quantity-paymentMethod">Quantity: {product.quantity}</p>
-                      <div className="price-container-paymentMethod">
-                        <span className="current-price-paymentMethod">
-                          ${(product.unit_price * product.quantity).toFixed(2)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p>No products found.</p>
-              )}
-            </div>
-          </div>
-
-          <div className="order-summary-paymentMethod">
-            <h3>Order Summary</h3>
-            <div className="summary-row-paymentMethod"><span>Subtotal</span><span className="price-blue-paymentMethod">${subtotal.toFixed(2)}</span></div>
-            <div className="summary-row-paymentMethod"><span>Discount</span><span className="price-blue-paymentMethod">- ${discount.toFixed(2)}</span></div>
-            <div className="summary-row-paymentMethod"><span>Shipping Fee</span><span className="price-blue-paymentMethod">${shippingFee.toFixed(2)}</span></div>
-            <div className="summary-row-paymentMethod total-row-paymentMethod"><span>Total</span><span className="price-blue-paymentMethod">${total.toFixed(2)}</span></div>
-          </div>
+        <InformationProductDetail
+  products={products}
+  subtotal={subtotal}
+  discount={discount}
+  shippingFee={shippingFee}
+  total={total}
+/>
         </div>
       </div>
     </div>

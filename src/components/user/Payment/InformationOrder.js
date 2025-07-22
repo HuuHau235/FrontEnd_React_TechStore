@@ -1,9 +1,10 @@
+// InformationOrder.jsx
 import { useState, useEffect } from "react";
 import "../../../pages/user/Payment/Payment.css";
 import LoadingSpinner from "../../../components/common/LoadingSpinner";
-import { data } from "react-router-dom";
+import InformationProductDetail from "./InformationProductDetail"; // Import component con
 
-const InformationOrder = ({ onContinue, setCurrentStep, currentStep }) => {
+const InformationOrder = ({ onContinue, setCurrentStep }) => {
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -16,76 +17,10 @@ const InformationOrder = ({ onContinue, setCurrentStep, currentStep }) => {
     wardName: "",
   });
 
-  const [products, setProducts] = useState([]);
-  const [subtotal, setSubtotal] = useState(0);
-  const [discount, setDiscount] = useState(0);
-  const [shippingFee, setShippingFee] = useState(0);
-  const [total, setTotal] = useState(0);
-
-  const [isLoading, setIsLoading] = useState(false);
   const [locationData, setLocationData] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
-  const [order, setOrder] = useState(null);
-  const orderId = localStorage.getItem("currentOrderId");
-  const token = localStorage.getItem("token");
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("checkoutData"));
-    console.log("data", data);
-    if (data) {
-      setProducts(data.items || []);
-      setSubtotal(data.subtotal || 0);
-      setDiscount(data.discount || 0);
-      setShippingFee(data.shippingCost || 0);
-      setTotal(data.total || 0);
-    }
-  }, []);
-  useEffect(() => {
-    if (!products || products.length === 0) return;
-
-    const subtotalCalc = products.reduce((sum, item) => {
-      const price = Number(item.unit_price) || 0;
-      const qty = Number(item.quantity) || 0;
-      return sum + price * qty;
-    }, 0);
-
-    setSubtotal(subtotalCalc);
-    setTotal(subtotalCalc + shippingFee - discount);
-  }, [products, shippingFee, discount]);
-
-  useEffect(() => {
-    const fetchOrder = async () => {
-      setIsLoading(true);
-      try {
-        const res = await fetch(`https://backendlaraveltechstore-production.up.railway.app/api/user/orders/${orderId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          setOrder(data.order);
-          setProducts(data.order.order_details);
-          setShippingFee(data.order.shipping_fee || 0);  
-          setDiscount(data.order.discount || 0);         
-          setTotal(Number(data.order.total_amount) || 0);
-        } else {
-          alert("Failed to load order data.");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Error loading order details.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    if (orderId && token) {
-      fetchOrder();
-    }
-  }, [orderId, token]);
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     fetch("https://provinces.open-api.vn/api/?depth=3")
       .then((res) => res.json())
@@ -191,9 +126,9 @@ const InformationOrder = ({ onContinue, setCurrentStep, currentStep }) => {
       alert("An error occurred while submitting the information.");
     }
   };
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
+
+  if (isLoading) return <LoadingSpinner />;
+
   return (
     <div className="payment-container-information-order">
       <h1 className="payment-title-information-order">Payment</h1>
@@ -215,165 +150,70 @@ const InformationOrder = ({ onContinue, setCurrentStep, currentStep }) => {
                 <div className="form-row-information-order">
                   <div className="form-group-information-order">
                     <label>Full Name</label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleInputChange}
-                      placeholder="Enter your full name..."
-                      required
-                    />
+                    <input name="fullName" value={formData.fullName} onChange={handleInputChange} placeholder="Enter your full name" required />
                   </div>
                   <div className="form-group-information-order">
                     <label>Phone</label>
-                    <input
-                      type="text"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      placeholder="Enter your phone number..."
-                      required
-                    />
+                    <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Enter your phone number (10 digits)" required />
                   </div>
                 </div>
 
                 <div className="form-group-information-order">
                   <label>Address</label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    placeholder="Enter your address..."
-                    required
-                  />
+                  <input name="address" value={formData.address} onChange={handleInputChange} placeholder="Enter your address (street, house number, etc.)" required />
                 </div>
 
+                {/* Province / District / Ward */}
                 <div className="form-row-information-order">
                   <div className="form-group-information-order">
-                    <label>Province/City</label>
-                    <select
-                      value={formData.province}
-                      onChange={handleProvinceChange}
-                      required
-                    >
+                    <label>Province</label>
+                    <select value={formData.province} onChange={handleProvinceChange} required>
                       <option value="">-- Select Province --</option>
                       {locationData.map((p) => (
-                        <option key={p.code} value={String(p.code)}>
-                          {p.name}
-                        </option>
+                        <option key={p.code} value={String(p.code)}>{p.name}</option>
                       ))}
                     </select>
                   </div>
                   <div className="form-group-information-order">
                     <label>District</label>
-                    <select
-                      value={formData.district}
-                      onChange={handleDistrictChange}
-                      disabled={!formData.province}
-                      required
-                    >
+                    <select value={formData.district} onChange={handleDistrictChange} disabled={!formData.province} required>
                       <option value="">-- Select District --</option>
                       {districts.map((d) => (
-                        <option key={d.code} value={String(d.code)}>
-                          {d.codename}
-                        </option>
+                        <option key={d.code} value={String(d.code)}>{d.codename}</option>
                       ))}
                     </select>
                   </div>
                   <div className="form-group-information-order">
-                    <label>Ward/Commune</label>
-                    <select
-                      value={formData.ward}
-                      onChange={handleWardChange}
-                      disabled={!formData.district}
-                      required
-                    >
+                    <label>Ward</label>
+                    <select value={formData.ward} onChange={handleWardChange} disabled={!formData.district} required>
                       <option value="">-- Select Ward --</option>
                       {wards.map((w) => (
-                        <option key={w.code} value={String(w.code)}>
-                          {w.name}
-                        </option>
+                        <option key={w.code} value={String(w.code)}>{w.name}</option>
                       ))}
                     </select>
                   </div>
                 </div>
 
-                <button type="submit" className="continue-btn-information-order">
-                  Continue
-                </button>
+                <button type="submit" className="continue-btn-information-order">Continue</button>
               </div>
             </form>
           </div>
 
-          <div className="form-section-information-order">
-            <div
-              className="section-header-information-order"
-              onClick={() => setCurrentStep(2)}
-            >
+          <div className="form-section-information-order" onClick={() => setCurrentStep(2)}>
+            <div className="section-header-information-order">
               <div className="step-number-information-order clickable">2</div>
               <h2>Payment Method</h2>
             </div>
           </div>
 
-          <div className="form-section-information-order">
-            <div
-              className="section-header-information-order"
-              onClick={() => setCurrentStep(3)}
-            >
+          <div className="form-section-information-order" onClick={() => setCurrentStep(3)}>
+            <div className="section-header-information-order">
               <div className="step-number-information-order clickable">3</div>
               <h2>Order Confirmation</h2>
             </div>
           </div>
         </div>
-
-        <div className="right-section-information-order">
-          <div className="product-section-information-order">
-            <h3>Products</h3>
-            <div className="product-list-information-order">
-              {products.map((product, index) => (
-                <div key={`${product.id || product.cart_item_id}-${index}`} className="product-item-information-order">
-                  <img
-                    src={product.image || "/placeholder.svg"}
-                    alt={product.name}
-                    className="product-image-information-order"
-                  />
-                  <div className="product-details-information-order">
-                    <h4>{product.name}</h4>
-                    <p className="quantity-information-order">Quantity: {product.quantity}</p>
-                    <div className="price-container-information-order">
-                      <span className="current-price-information-order">
-                        ${(product.unit_price * product.quantity).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="order-summary-information-order">
-            <h3>Order Summary</h3>
-            <div className="summary-row-information-order">
-              <span>Subtotal</span>
-              <span className="price-blue-information-order">${subtotal.toFixed(2)}</span>
-            </div>
-            {discount > 0 && (
-              <div className="summary-row-information-order">
-                <span>Discount</span>
-                <span className="price-blue-information-order">-${discount.toFixed(2)}</span>
-              </div>
-            )}
-            <div className="summary-row-information-order">
-              <span>Shipping Fee</span>
-              <span className="price-blue-information-order">${shippingFee.toFixed(2)}</span>
-            </div>
-            <div className="summary-row-information-order total">
-              <span>Total</span>
-              <span className="price-blue-information-order">${total.toFixed(2)}</span>
-            </div>
-          </div>
-        </div>
+        <InformationProductDetail />
       </div>
     </div>
   );

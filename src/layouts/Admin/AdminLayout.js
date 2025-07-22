@@ -38,7 +38,7 @@ export default function AdminLayout() {
         theme={theme}
         setTheme={setTheme}
       />
-      <div style={{ flex: 1 }}>{renderContent()}</div>
+      <div style={{ flex: 1 }} className="outlet">{renderContent()}</div>
     </div>
   );
 }

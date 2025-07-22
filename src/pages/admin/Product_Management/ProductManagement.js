@@ -6,6 +6,7 @@ import LoadingSpinner from "../../../components/common/LoadingSpinner";
 import EditProductForm from "../../../pages/admin/Product_Management/EditProduct";
 import AddProductForm from "../../../pages/admin/Product_Management/AddProductForm";
 import { toast } from "react-toastify";
+import { Box, NotebookPen, TriangleAlert, X } from "lucide-react";
 
 const ProductManagement = ({ categoryId = null }) => {
   const [loading, setLoading] = useState(true);
@@ -137,12 +138,12 @@ const handleDelete = async (id) => {
 
   if (loading) return <LoadingSpinner />;
 
-  const statsDisplay = [
-    { title: "Total Products", value: stats.total_stock, icon: "📦" },
-    { title: "In Stock", value: stats.in_stock_quantity, icon: "📋" },
-    { title: "Low Stock", value: stats.low_stock_quantity, icon: "⚠️" },
-    { title: "Out Of Stock", value: stats.out_of_stock_quantity, icon: "❌" },
-  ];
+const statsDisplay = [
+  { title: "Total Products", value: stats.total_stock, icon: <Box size={35}/> },
+  { title: "In Stock", value: stats.in_stock_quantity, icon: <NotebookPen size={35}/> },
+  { title: "Low Stock", value: stats.low_stock_quantity, icon: <TriangleAlert size={35}/> },
+  { title: "Out Of Stock", value: stats.out_of_stock_quantity, icon: <X size={35}/> },
+];
 
   const selectedGroup = groupedProducts.find((g) => Number(g.category_id) === Number(categoryId));
   const selectedCategoryName = categoryId === null ? "All" : selectedGroup ? selectedGroup.category : "Unknown";
@@ -268,7 +269,7 @@ const handleDelete = async (id) => {
         <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
           Previous
         </button>
-        <span>Page {currentPage} / {totalPages}</span>
+        <span>{currentPage} / {totalPages}</span>
         <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
           Next
         </button>

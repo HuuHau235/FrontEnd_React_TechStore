@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-	import Sidebar from "../../../pages/user/Sidebar/Sidebar";import HistoryContent from "../../../components/user/Profile/Hisroty";
+	import Sidebar from "../../../pages/user/Sidebar/Sidebar";
+  import HistoryContent from "../../../components/user/Profile/Hisroty";
 import "../../../pages/user/Profile/History.css";
 import axios from "axios";
 import LoadingSpinner from "../../../components/common/LoadingSpinner";

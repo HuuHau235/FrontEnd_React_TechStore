@@ -1,14 +1,27 @@
 .admin-sidebar {
-  width: 250px;
-  height: 130vh;
-  /* width: 330px; */
-  background-color: #0D1B2A;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+    width: 250px;
+    height: 800px;
+    background-color: #0D1B2A;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    overflow-y: auto;
 }
+
+.outlet {
+  height: 800px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.outlet::-webkit-scrollbar {
+  display: none;
+}
+
+
 
 .admin-profile {
   display: flex;
@@ -153,4 +166,40 @@
 
 .product-submenu-scroll::-webkit-scrollbar {
   display: none;
+}
+
+
+pagination-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.pagination-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  padding: 8px 12px;
+  background-color: #2E4258;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.pagination-controls button:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.pagination-controls span {
+  font-weight: 500;
+  color: #374151;
 }

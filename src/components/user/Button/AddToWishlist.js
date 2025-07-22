@@ -7,27 +7,18 @@ export default class AddToWishlist extends Component {
     added: this.props.addedToWishlist || false,
   };
 
-  handleAddToWishlist = async (productId) => {
-    if (this.state.added) {
-      toast.info("You have already added this to your wishlist!");
-      return;
-    }
+  async componentDidMount() {
+    const token = localStorage.getItem("token");
+    const productId = this.props.item?.id || this.props.item;
+
+    if (!token || !productId) return;
 
     try {
-      const token = localStorage.getItem("token");
-      const finalUserId = localStorage.getItem("userId");
+      const userId = localStorage.getItem("userId");
+      if (!userId) return;
 
-      if (!finalUserId || !token) {
-        toast.error("Unable to retrieve user information.");
-        return;
-      }
-
-      const response = await axios.post(
-        "https://backendlaraveltechstore-production.up.railway.app/api/user/wishlist/add",
-        {
-          user_id: finalUserId,
-          product_id: productId,
-        },
+      const response = await axios.get(
+        `https://backendlaraveltechstore-production.up.railway.app/api/user/wishlist/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -36,18 +27,49 @@ export default class AddToWishlist extends Component {
         }
       );
 
+      const wishlistItems = response.data?.wishlist || [];
+
+      const alreadyInWishlist = wishlistItems.some(
+        (item) => item.product_id === productId
+      );
+
+      if (alreadyInWishlist) {
+        this.setState({ added: true });
+      }
+
+    } catch (error) {
+      console.error("Failed to fetch wishlist:", error.response?.data || error.message);
+    }
+  }
+
+  handleAddToWishlist = async (productId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const userIdRes = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/getUserId", {
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+        withCredentials: true,
+      });
+
+      const finalUserId = userIdRes.data.userId;
+
+      const response = await axios.post(
+        "https://backendlaraveltechstore-production.up.railway.app/api/user/wishlist/add",
+        { user_id: finalUserId, product_id: productId },
+        { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
+      );
+
       const msg = response.data?.message;
 
-      if (msg === "Already in wishlist") {
+      if (msg === "Đã có trong wishlist") {
         toast.info("This product is already in your wishlist.");
       } else {
         toast.success("Successfully added to wishlist!");
+        window.dispatchEvent(new Event("wishlist-updated"));
       }
 
-      this.setState({ added: true });
     } catch (error) {
-      console.error("Error adding to wishlist:", error.response?.data || error.message);
       toast.error("Failed to add to wishlist.");
+      console.error("Error:", error.response?.data || error.message);
     }
   };
 

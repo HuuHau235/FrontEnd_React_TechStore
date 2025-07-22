@@ -270,33 +270,31 @@
 
 /* CategoryItemHome */
 .categories-container {
-  padding: 40px 20px;
   display: flex;
+  overflow-x: auto;
   max-width: 1080px;
   margin: 0 auto;
-   justify-content: space-between;
+  gap: 15px;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-
-.categories-wrapper {
-  max-width: 1080px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-}
-
-.category-item {
+.category-item{
+  flex: 0 0 calc((100% - (25px * 5)) / 6);
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 15px 10px;
-  border-radius: 12px;
-  min-width: 120px;
-}
+  transition: transform 0.2s ease;
+  height: 200px;
+  min-width: 120px; 
+  box-sizing: border-box;
+  border: 1px solid #eee;
+  padding: 10px;
+  background-color: white;
+  border-radius: 8px;
+  
 
 .category-item:hover {
   transform: translateY(-5px);
@@ -310,10 +308,6 @@
   transition: transform 0.3s ease;
 }
 
-/* //////////////// */
-.categories-container {
-  padding: 20px;
-}
 
 .categories-wrapper {
   display: grid;
@@ -327,7 +321,7 @@
   align-items: center;
   cursor: pointer;
   transition: transform 0.2s ease;
-  height: 100%;
+  /* height: 100%; */
 }
 
 .category-item:hover {
@@ -1423,19 +1417,20 @@
 
 /* MacbookProAdBanner */
 .macbook-showcase {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  width: 100%;
   max-width: 1080px;
-  border-radius: 10px;
-  gap: 60px;
+  height: 400px;
   margin: 0 auto;
-  margin-bottom: 50px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 80px;
 }
-
 .save-badge {
   background: #B1DDFF;
-  width: 30%;
+  width: 50%;
   color: #000000;
   padding: 10px 20px;
   border-radius: 10px;
@@ -1464,28 +1459,29 @@
   transform: translateX(-50%);
   background: #ffeaa7;
   color: #2d3436;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  font-size: 20px;
-  font-weight: 800;
-  z-index: 10;
-  box-shadow: 0 6px 20px rgba(255, 234, 167, 0.6);
-  border: 2px solid #fdcb6e;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  padding: 4px 6px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: clamp(10px, 2vw, 14px);
+  box-shadow: 0 4px 12px rgba(255, 234, 167, 0.5);
+  border: 1.5px solid #fdcb6e;
+  aspect-ratio: 1 / 1;
+  min-width: 40px;
+  min-height: 40px;
+  overflow: hidden;
+  word-wrap: break-word;
+  white-space: normal;
+  position: absolute;
+  z-index: 10;
 }
 
-.macbook-image {
-  width: 500px;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease;
-}
 
-.macbook-image:hover {
+.macbook-image{
+
   transform: scale(1.02) translateY(-5px);
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
 }
@@ -1561,19 +1557,15 @@
   display: inline-block;
 }
 
-.macbook-showcase {
-  width: 100%;
-  max-width: 1080px;
-  height: 400px;
-  margin: 40px auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  overflow: hidden;
+.showcase-main-banner{
+      display: grid
+;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
 }
-
 .content-left {
-  flex: 1;
+  /* flex: 1; */
+
   padding-right: 20px;
   height: 100%;
   display: flex;
@@ -1582,7 +1574,8 @@
 }
 
 .content-right {
-  flex: 1;
+  /* flex: 1; */
+
   text-align: center;
   height: 100%;
   display: flex;
@@ -1591,10 +1584,12 @@
 
 .macbook-image {
   width: 100%;
-  max-width: 300px;
-  height: auto;
+  max-height: 400px;
   object-fit: contain;
   border-radius: 10px;
+  display: block;
+  margin: 0 auto;
+
 }
 
 .product-title-macbook {

@@ -182,11 +182,9 @@ export default function Cart() {
         const coupon = response.data.coupon;
         setAppliedCoupon(coupon);
 
-
         const subtotal = cartItems
           .filter((item) => selectedItems.includes(item.id))
           .reduce((sum, item) => sum + item.price * item.quantity, 0);
-
 
         if (coupon.type === "percent") {
           setDiscount((subtotal * coupon.value) / 100);
@@ -194,11 +192,19 @@ export default function Cart() {
           setDiscount(Number(coupon.value));
         }
 
-
-        toast.success(`Coupon applied: ${coupon.code}`);
+        toast.success(`Discount code applied successfully.: ${coupon.code}`);
       })
       .catch((error) => {
-        toast.error(error.response?.data?.message || "Invalid coupon.");
+        const message = error.response?.data?.message || "The coupon is invalid.";
+
+        if (message === "Coupon has expired") {
+          toast.warning("The discount code has expired!");
+        } else if (message === "Coupon not found") {
+          toast.warning("The discount code does not exist!");
+        } else {
+          toast.error("Unable to apply the discount code!");
+        }
+
         setDiscount(0);
         setAppliedCoupon(null);
       });
@@ -247,10 +253,12 @@ export default function Cart() {
     const payload = {
       selected_items: selectedData,
       shipping_option: shippingOption,
+      shipping_fee: shippingCost,
       coupon_code: appliedCoupon?.code || null,
       discount: discount,
       total_amount: subtotal - discount + shippingCost,
     };
+
 
     try {
       const response = await axios.post(`${apiUrl}/api/user/cart/checkout`, payload, {

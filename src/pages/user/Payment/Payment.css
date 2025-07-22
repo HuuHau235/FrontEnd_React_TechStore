@@ -418,6 +418,8 @@
   font-size: 18px;
   font-weight: 600;
   color: #1f2937;
+  margin-right: 15px;
+  font-weight: bold;
 }
 
 .total-amount-paymentMethod {

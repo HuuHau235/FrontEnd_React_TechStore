@@ -56,10 +56,11 @@ const PromoBanner = () => {
   };
 
   const displayProduct = summerSaleProduct || fallback;
+if (products.length === 0 && !summerSaleProduct) return null;
 
   return (
     <div className="showcase-container-banner">
-      <div className="main-product-banner">
+       <div className="main-product-banner">
         <Slider {...settings}>
           {products.map((product, index) => (
             <div key={product.id}>

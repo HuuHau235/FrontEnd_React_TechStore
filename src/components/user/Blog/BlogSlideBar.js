@@ -25,6 +25,7 @@ const BlogSlideBar = ({ selectedCategoryId, setSelectedCategoryId }) => {
       try {
         const categoryRes = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/blogs/categories");
         setCategories(categoryRes.data);
+       console.log("Categories fetched:", categoryRes.data);
       } catch (err) {
         console.error("Error fetching categories:", err);
       }

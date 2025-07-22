@@ -69,58 +69,62 @@ const FeaturedProductSection = () => {
     : products.filter((p) => p.category === selectedCategory);
 
   return (
-    <div className="product-showcase-featured">
-      <div className="showcase-container-featured">
-        <div className="featured-section-featured">
-          <div className="main-content-featured">
-            <div className="category-tabs-featured">
-              <h2 className="featured-title-featured">Featured Products</h2>
-              <div className="category-buttons-featured">
-                <button
-                  className="category-tab-featured browse-all-btn-featured"
-                  onClick={handleBrowseAll}
-                >
-                  Browse All Product <ArrowRight className="arrow-icon-featured" size={16} />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="products-grid-featured">
-            {filteredProducts.slice(0, 10).map((product) => (
-              <div
-                key={product.id}
-                className="product-card-featured"
-                onClick={() => handleProductClick(product.id)}
-                style={{ cursor: 'pointer' }}
-              >
-                {product.status && product.status !== "null" && (
-                  <div className="sale-badge-featured">{product.status}</div>
-                )}
-
-                <div className="product-image-featured">
-                  <img src={product.image} alt={product.name} />
+  <div className="product-showcase-featured">
+    <div className="showcase-container-featured">
+      <div className="featured-section-featured">
+        <div className="main-content-featured">
+          {filteredProducts.length > 0 && (
+            <>
+              <div className="category-tabs-featured">
+                <h2 className="featured-title-featured">Featured Products</h2>
+                <div className="category-buttons-featured">
+                  <button
+                    className="category-tab-featured browse-all-btn-featured"
+                    onClick={handleBrowseAll}
+                  >
+                    Browse All Product <ArrowRight className="arrow-icon-featured" size={16} />
+                  </button>
                 </div>
-                <div className="product-info-featured">
-                  <div className="product-rating-featured">
-                    {renderStars(product.rating)}
-                  </div>
-                  <h3 className="product-name-featured">{product.name}</h3>
-                  <div className="product-price-featured">
-                    <span className="current-price-featured">${product.price}</span>
-                    {product.old_price && (
-                      <span className="original-price-featured">${product.old_price}</span>
+              </div>
+
+              <div className="products-grid-featured">
+                {filteredProducts.slice(0, 10).map((product) => (
+                  <div
+                    key={product.id}
+                    className="product-card-featured"
+                    onClick={() => handleProductClick(product.id)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {product.status && product.status !== "null" && (
+                      <div className="sale-badge-featured">{product.status}</div>
                     )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
 
+                    <div className="product-image-featured">
+                      <img src={product.image} alt={product.name} />
+                    </div>
+                    <div className="product-info-featured">
+                      <div className="product-rating-featured">
+                        {renderStars(product.rating)}
+                      </div>
+                      <h3 className="product-name-featured">{product.name}</h3>
+                      <div className="product-price-featured">
+                        <span className="current-price-featured">${product.price}</span>
+                        {product.old_price && (
+                          <span className="original-price-featured">${product.old_price}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default FeaturedProductSection;

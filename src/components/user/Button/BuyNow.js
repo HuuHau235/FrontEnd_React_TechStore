@@ -17,7 +17,7 @@ const BuyNow = ({ product, className = "", children }) => {
           user_id: userId,
           products: [
             {
-              product_id: product.id,
+              product_id: product?.id,
               quantity: 1,
               unit_price: product.price,
             },

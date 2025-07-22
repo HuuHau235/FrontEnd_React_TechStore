@@ -58,17 +58,66 @@ const HistoryContent = () => {
     }
   };
 
-  const handleReorderOrder = async (order) => {
-    const products = order.order_details.map((detail) => ({
-      product_id: detail.product_id,
-      quantity: detail.quantity,
-      unit_price: detail.unit_price,
-    }));
+ const handleReorderOrder = async (order) => {
+  const unavailableProducts = order.order_details.filter(
+    (detail) => !detail.product
+  );
 
-    try {
-      const response = await axios.post(
-        `${apiUrl}/api/user/orders/create`,
-        { products },
+  if (unavailableProducts.length > 0) {
+    const names = unavailableProducts.map((d) => d.product_name || "Không rõ").join(", ");
+    toast.error(`Không thể đặt lại. Sản phẩm đã hết hàng hoặc không còn: ${names}`);
+    return;
+  }
+
+
+  const products = order.order_details.map((detail) => ({
+    product_id: detail.product_id,
+    quantity: detail.quantity,
+    unit_price: detail.unit_price,
+  }));
+
+  try {
+    const response = await axios.post(
+      "/api/user/orders/create",
+      { products },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const newOrderId = response.data.order_id;
+    const {
+      full_name,
+      phone,
+      address,
+      province,
+      district,
+      ward,
+    } = order;
+// console.log("🟢 Sending PUT request to update order info with:");
+//     console.log("Order ID:", newOrderId);
+    console.log("Payload:", {
+      full_name,
+      phone,
+      address,
+      province,
+      district,
+      ward,
+    });
+    if (full_name && phone && address && province && district && ward) {
+      await axios.put(
+        `/api/user/orders/${newOrderId}/update-info`,
+        {
+          full_name,
+          phone,
+          address,
+          province,
+          district,
+          ward,
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -76,44 +125,16 @@ const HistoryContent = () => {
           },
         }
       );
-
-      const newOrderId = response.data.order_id;
-      const {
-        full_name,
-        phone,
-        address,
-        province,
-        district,
-        ward,
-      } = order;
-
-      if (full_name && phone && address && province && district && ward) {
-        await axios.put(
-          `${apiUrl}/api/user/orders/${newOrderId}/update-info`,
-          {
-            full_name,
-            phone,
-            address,
-            province,
-            district,
-            ward,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-      }
-
-      toast.success("Reordered successfully!");
-      navigate(`${apiUrl}/user/payment?orderId=${newOrderId}`);
-    } catch (error) {
-      toast.error("Failed to reorder.");
-      console.error(error);
     }
-  };
+
+    toast.success("Đặt lại đơn hàng thành công!");
+    navigate(`/user/payment?orderId=${newOrderId}`);
+  } catch (error) {
+    toast.error("Đặt lại đơn hàng thất bại.");
+    console.error(error);
+  }
+};
+
 
   useEffect(() => {
     if (selectedDate) {

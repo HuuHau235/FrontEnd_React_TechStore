@@ -104,11 +104,11 @@ export default function ReviewManagement() {
         </table>
       </div>
 
-      <div className="pagination-controls">
+       <div className="pagination-controls">
         <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
           Previous
         </button>
-        <span>Page {currentPage} / {totalPages}</span>
+        <span>{currentPage} / {totalPages}</span>
         <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
           Next
         </button>

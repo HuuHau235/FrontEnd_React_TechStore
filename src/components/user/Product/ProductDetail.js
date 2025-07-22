@@ -53,6 +53,7 @@ const ProductDetail = () => {
         setSelectedColor(data.colors?.[0] || "Black");
       } catch (err) {
         toast.error("Unable to retrieve product information.");
+        setProduct(null);
       } finally {
         setLoading(false);
       }
@@ -153,7 +154,11 @@ const ProductDetail = () => {
   }, [id]);
 
   if (loading) return <div className="loading"><LoadingSpinner />.</div>;
-  if (!product) return <div className="error">Product not found.</div>;
+if (!product && !loading) {
+  return <div className="error" style={{ padding: "2rem", fontSize: "1.2rem", color: "red" }}>
+Product does not exist.  
+</div>;
+}
 
   return (
     <div className="container-product-detail">
@@ -232,7 +237,7 @@ const ProductDetail = () => {
           </div>
 
           <div className="action-buttons-product-detail">
-            <AddToCart
+             <AddToCart
               product={product}
               quantity={quantity}
               selectedColor={selectedColor}

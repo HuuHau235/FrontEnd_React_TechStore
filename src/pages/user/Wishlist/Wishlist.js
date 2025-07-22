@@ -34,6 +34,8 @@ export default function Wishlist() {
       );
 
       setWishlistItems((prev) => prev.filter((wishItem) => wishItem.id !== item.id));
+      window.dispatchEvent(new Event("wishlist-updated"));
+
     } catch (error) {
       console.error("Failed to remove from wishlist:", error.response?.data || error.message);
       toast.error("Failed to remove item from wishlist.");
