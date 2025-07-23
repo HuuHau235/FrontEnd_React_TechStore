@@ -23,7 +23,7 @@ export default function Wishlist() {
       if (!token) throw new Error("Token not found");
 
       await axios.delete(
-        `https://backendlaraveltechstore-production.up.railway.app/api/user/delete/wishlist/${item.id}`,
+        `https://backend-laravel-techstore-4.onrender.com/api/user/delete/wishlist/${item.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -49,7 +49,7 @@ export default function Wishlist() {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Token not found.");
 
-        const idRes = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/getUserId", {
+        const idRes = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/getUserId", {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
@@ -57,7 +57,7 @@ export default function Wishlist() {
         const fetchedUserId = idRes.data.userId;
         setUserId(fetchedUserId);
 
-        const userRes = await axios.get(`https://backendlaraveltechstore-production.up.railway.app/api/user/${fetchedUserId}`, {
+        const userRes = await axios.get(`https://backend-laravel-techstore-4.onrender.com/api/user/${fetchedUserId}`, {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
@@ -70,7 +70,7 @@ export default function Wishlist() {
         });
 
         const wishlistRes = await axios.get(
-          `https://backendlaraveltechstore-production.up.railway.app/api/user/wishlist/${fetchedUserId}`,
+          `https://backend-laravel-techstore-4.onrender.com/api/user/wishlist/${fetchedUserId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,

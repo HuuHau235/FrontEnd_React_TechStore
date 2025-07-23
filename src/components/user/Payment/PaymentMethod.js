@@ -54,7 +54,7 @@ const PaymentMethod = () => {
 
       if (selectedPayment === "qr") {
         if (!showQRCode) return setShowQRCode(true);
-        await axios.post("https://backendlaraveltechstore-production.up.railway.app/api/user/orders/confirm-payment", {
+        await axios.post("https://backend-laravel-techstore-4.onrender.com/api/user/orders/confirm-payment", {
           order_id: orderId,
           method: paymentMap[selectedPayment],
         });
@@ -64,7 +64,7 @@ const PaymentMethod = () => {
 
 
       if (selectedPayment === "cash") {
-        await axios.post("https://backendlaraveltechstore-production.up.railway.app/api/user/orders/confirm-payment", {
+        await axios.post("https://backend-laravel-techstore-4.onrender.com/api/user/orders/confirm-payment", {
           order_id: orderId,
           method: paymentMap[selectedPayment],
         });
@@ -74,7 +74,7 @@ const PaymentMethod = () => {
 
       if (selectedPayment === "momo") {
         if (amountVND > 50000000) return alert("⚠️ MoMo supports payments up to 50 million VND.");
-        const res = await fetch("https://backendlaraveltechstore-production.up.railway.app/api/user/momo/create-payment", {
+        const res = await fetch("https://backend-laravel-techstore-4.onrender.com/api/user/momo/create-payment", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -87,7 +87,7 @@ const PaymentMethod = () => {
       }
 
       if (selectedPayment === "vnpay") {
-        const res = await axios.post("https://backendlaraveltechstore-production.up.railway.app/api/user/create-payment", {
+        const res = await axios.post("https://backend-laravel-techstore-4.onrender.com/api/user/create-payment", {
           amount: amountVND,
           order_id: orderId,
         });
@@ -116,7 +116,7 @@ useEffect(() => {
   const fetchOrder = async () => {
     try {
       const res = await fetch(
-        `https://backendlaraveltechstore-production.up.railway.app/api/user/orders/${orderId}`,
+        `https://backend-laravel-techstore-4.onrender.com/api/user/orders/${orderId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

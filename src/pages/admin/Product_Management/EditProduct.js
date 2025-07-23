@@ -23,8 +23,8 @@ const EditProductForm = ({ id, onCancel, onSave }) => {
     const fetchData = async () => {
       try {
         const [productRes, categoryRes] = await Promise.all([
-          axios.get(`https://backendlaraveltechstore-production.up.railway.app/api/admin/edit/products/${id}`),
-          axios.get(`https://backendlaraveltechstore-production.up.railway.app/api/admin/categories`),
+          axios.get(`https://backend-laravel-techstore-4.onrender.com/api/admin/edit/products/${id}`),
+          axios.get(`https://backend-laravel-techstore-4.onrender.com/api/admin/categories`),
         ]);
 
         const productData = productRes?.data?.data;
@@ -72,7 +72,7 @@ const EditProductForm = ({ id, onCancel, onSave }) => {
       };
 
       const res = await axios.put(
-        `https://backendlaraveltechstore-production.up.railway.app/api/admin/update/products/${id}`,
+        `https://backend-laravel-techstore-4.onrender.com/api/admin/update/products/${id}`,
         dataToSend
       );
 

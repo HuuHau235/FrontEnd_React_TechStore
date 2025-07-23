@@ -37,7 +37,7 @@ const BestDealSection = () => {
       const fetchUserId = async () => {
         try {
           const token = localStorage.getItem("token");
-          const res = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/getUserId", {
+          const res = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/getUserId", {
             headers: { Authorization: `Bearer ${token}` },
           });
           const fetchedUserId = res.data.userId;
@@ -54,7 +54,7 @@ const BestDealSection = () => {
   useEffect(() => {
     const fetchBestDeals = async () => {
       try {
-        const res = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/product/promoted");
+        const res = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/product/promoted");
         const allPromoted = res.data?.data || [];
         const bestDeals = allPromoted.filter((p) => p.promotion_type === "best deal");
         const uniqueDeals = Array.from(new Map(bestDeals.map(p => [p.id, p])).values());

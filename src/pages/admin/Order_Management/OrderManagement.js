@@ -13,7 +13,7 @@ export default function OrderManagement() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("https://backendlaraveltechstore-production.up.railway.app/api/admin/orders")
+    fetch("https://backend-laravel-techstore-4.onrender.com/api/admin/orders")
       .then((res) => res.json())
       .then((data) => {
         if (data.status && data.data) {
@@ -33,7 +33,7 @@ export default function OrderManagement() {
   const handleDeleteOrder = (id) => {
     if (!window.confirm("Are you sure you want to delete this order?")) return;
 
-    fetch(`https://backendlaraveltechstore-production.up.railway.app/api/admin/orders/${id}`, {
+    fetch(`https://backend-laravel-techstore-4.onrender.com/api/admin/orders/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())

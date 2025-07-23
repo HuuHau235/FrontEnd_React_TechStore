@@ -22,7 +22,7 @@ export default function OTP_Verification({ email}) {
     }
     try {
       setLoading(true);
-      await axios.post("https://backendlaraveltechstore-production.up.railway.app/api/auth/verify-otp", { email, email_otp});
+      await axios.post("https://backend-laravel-techstore-4.onrender.com/api/auth/verify-otp", { email, email_otp});
       toast.success("Your account has been successfully verified!");
       navigate("/signin");
     } catch (error) {

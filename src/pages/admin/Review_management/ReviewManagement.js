@@ -13,7 +13,7 @@ export default function ReviewManagement() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("https://backendlaraveltechstore-production.up.railway.app/api/admin/reviews")
+    fetch("https://backend-laravel-techstore-4.onrender.com/api/admin/reviews")
       .then((res) => res.json())
       .then((data) => {
         if (data.status && data.data) {
@@ -34,7 +34,7 @@ export default function ReviewManagement() {
   const handleDeleteReview = (id) => {
     if (!window.confirm("Are you sure you want to delete this review?")) return;
 
-    fetch(`https://backendlaraveltechstore-production.up.railway.app/api/admin/delete-reviews/${id}`, {
+    fetch(`https://backend-laravel-techstore-4.onrender.com/api/admin/delete-reviews/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())

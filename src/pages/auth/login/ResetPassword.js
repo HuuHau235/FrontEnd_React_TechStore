@@ -8,7 +8,7 @@ import { Await, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'https://backendlaraveltechstore-production.up.railway.app';
+axios.defaults.baseURL = 'https://backend-laravel-techstore-4.onrender.com';
 
 export default function ResetPasswordPage() {
     const API_URL = process.env.REACT_APP_BE_URL;

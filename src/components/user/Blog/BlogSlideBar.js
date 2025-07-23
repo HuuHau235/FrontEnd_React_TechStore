@@ -9,10 +9,10 @@ const BlogSlideBar = ({ selectedCategoryId, setSelectedCategoryId }) => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const latestRes = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/blogs/status");
+        const latestRes = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/blogs/status");
         setBlogPosts(latestRes.data);
         console.log("Latest blog data:", latestRes.data);
-        const allBlogRes = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/blogs/index");
+        const allBlogRes = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/blogs/index");
         const allImages = allBlogRes.data.filter(blog => blog.image_url);
         const shuffled = [...allImages].sort(() => 0.5 - Math.random());
         setGalleryImages(shuffled.slice(0, 6));
@@ -23,7 +23,7 @@ const BlogSlideBar = ({ selectedCategoryId, setSelectedCategoryId }) => {
 
     const fetchCategories = async () => {
       try {
-        const categoryRes = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/blogs/categories");
+        const categoryRes = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/blogs/categories");
         setCategories(categoryRes.data);
        console.log("Categories fetched:", categoryRes.data);
       } catch (err) {

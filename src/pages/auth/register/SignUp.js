@@ -81,7 +81,7 @@ export default function SignUpPage() {
 
     try {
       setLoading(true);
-      const response = await axios.post("https://backendlaraveltechstore-production.up.railway.app/api/auth/register", formData);
+      const response = await axios.post("https://backend-laravel-techstore-4.onrender.com/api/auth/register", formData);
 
       if (response.data.status) {
         toast.success(response.data.message || "Registration successful! Please check your email for OTP.");
@@ -99,7 +99,7 @@ export default function SignUpPage() {
   }
 
   const handleGoogleSignUp = () => {
-    window.location.href = "https://backendlaraveltechstore-production.up.railway.app/auth/google/redirect";
+    window.location.href = "https://backend-laravel-techstore-4.onrender.com/auth/google/redirect";
   };
 
   return (

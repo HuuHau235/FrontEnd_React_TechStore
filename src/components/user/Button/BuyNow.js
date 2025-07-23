@@ -12,7 +12,7 @@ const BuyNow = ({ product, className = "", children }) => {
       if (!token || !userId) throw new Error("Missing token or user ID");
 
       const res = await axios.post(
-        "https://backendlaraveltechstore-production.up.railway.app/api/user/orders/create",
+        "https://backend-laravel-techstore-4.onrender.com/api/user/orders/create",
         {
           user_id: userId,
           products: [

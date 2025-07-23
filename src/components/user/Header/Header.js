@@ -53,7 +53,7 @@ function Header({ onSearch }) {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const userIdRes = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/getUserId", {
+      const userIdRes = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/getUserId", {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
@@ -61,7 +61,7 @@ function Header({ onSearch }) {
       });
       const userId = userIdRes.data.userId;
 
-      const response = await fetch(`https://backendlaraveltechstore-production.up.railway.app/api/user/wishlist/${userId}`, {
+      const response = await fetch(`https://backend-laravel-techstore-4.onrender.com/api/user/wishlist/${userId}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ function Header({ onSearch }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/product/categories");
+        const response = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/product/categories");
         setCategories(Array.isArray(response.data.data) ? response.data.data : []);
       } catch (err) {
         console.error("Error fetching categories:", err);
@@ -103,7 +103,7 @@ function Header({ onSearch }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("https://backendlaraveltechstore-production.up.railway.appapi/products/top-images");
+        const response = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/products/top-images");
         setCategories(response.data.data);
       } catch (error) {
         console.error("Failed to fetch categories:", error);

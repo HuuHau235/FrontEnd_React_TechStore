@@ -44,7 +44,7 @@ const PaymentMethod = () => {
       setIsLoading(true);
 
       try {
-        const response = await fetch("https://backendlaraveltechstore-production.up.railway.app/api/user/momo/create-payment", {
+        const response = await fetch("https://backend-laravel-techstore-4.onrender.com/api/user/momo/create-payment", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: 'include',

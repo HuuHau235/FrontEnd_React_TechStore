@@ -18,7 +18,7 @@ export default class AddToWishlist extends Component {
       if (!userId) return;
 
       const response = await axios.get(
-        `https://backendlaraveltechstore-production.up.railway.app/api/user/wishlist/${userId}`,
+        `https://backend-laravel-techstore-4.onrender.com/api/user/wishlist/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -45,7 +45,7 @@ export default class AddToWishlist extends Component {
   handleAddToWishlist = async (productId) => {
     try {
       const token = localStorage.getItem("token");
-      const userIdRes = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/getUserId", {
+      const userIdRes = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/getUserId", {
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
         withCredentials: true,
       });
@@ -53,7 +53,7 @@ export default class AddToWishlist extends Component {
       const finalUserId = userIdRes.data.userId;
 
       const response = await axios.post(
-        "https://backendlaraveltechstore-production.up.railway.app/api/user/wishlist/add",
+        "https://backend-laravel-techstore-4.onrender.com/api/user/wishlist/add",
         { user_id: finalUserId, product_id: productId },
         { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
       );

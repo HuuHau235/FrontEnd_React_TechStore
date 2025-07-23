@@ -12,7 +12,7 @@ const FeaturedProductSection = () => {
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        const res = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/product/promoted");
+        const res = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/product/promoted");
         const allPromoted = res.data?.data || [];
 
         const featured = allPromoted

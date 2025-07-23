@@ -10,7 +10,7 @@ const CategoryItemHome = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-         const response = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/product/categories");
+         const response = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/product/categories");
         setCategories(response.data.data);
 
       } catch (err) {

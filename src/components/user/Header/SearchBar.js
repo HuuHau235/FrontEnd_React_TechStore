@@ -16,7 +16,7 @@ function SearchBar() {
     if (trimmed === "") return;
 
     try {
-      const res = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/products/list");
+      const res = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/products/list");
       const products = res.data?.data || []; 
 
       const keyword = trimmed.toLowerCase();

@@ -20,7 +20,7 @@ const ContentBlog = ({ selectedCategoryId, onSearchResult }) => {
 
   useEffect(() => {
     axios
-      .get("https://backendlaraveltechstore-production.up.railway.app/api/user/blogs/index")
+      .get("https://backend-laravel-techstore-4.onrender.com/api/user/blogs/index")
     
       .then((res) => {
         setCards(res.data);

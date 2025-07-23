@@ -16,7 +16,7 @@ const LatestHomePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("https://backendlaraveltechstore-production.up.railway.app/api/user/blogs/index");
+        const res = await axios.get("https://backend-laravel-techstore-4.onrender.com/api/user/blogs/index");
         setAllCards(res.data);
         console.log("Raw response:", res.data);
 
